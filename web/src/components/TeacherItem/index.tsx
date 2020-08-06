@@ -1,38 +1,56 @@
-import React from 'react'
-import zipzorpIcon from '../../assets/images/icons/whatsapp.svg'
+import React from "react";
+import zipzorpIcon from "../../assets/images/icons/whatsapp.svg";
+import api from "../../services/api";
 
-import './styles.css'
+import "./styles.css";
 
-
-function TeacherItem() {
-    return (
-        <article className="teacher-item">
-            <header>
-                <img
-                    src="https://p2.trrsf.com/image/fget/cf/1200/1200/filters:quality(85)/images.terra.com/2020/05/03/3315670-fausto-silva-apareceu-com-mulher-e-filho-650x488-2.jpg"
-                    alt="Teacher Fausto" />
-                <div>
-                    <strong>Teacher Fausto</strong>
-                    <span>Programação</span>
-                </div>
-            </header>
-            <p>
-                Fausto Corrêa da Silva (Porto Ferreira, 2 de maio de 1950), popularmente conhecido como Faustão,
-                    <br /> <br />
-                    é um apresentador de televisão, radialista e repórter e casualmente ator brasileiro. Célebre por apresentar o programa de auditório Domingão do Faustão, da Rede Globo, desde 1989.
-                    </p>
-
-            <footer>
-                <p>
-                    Preço/hora
-                            <strong>R$ 1000,00</strong>
-                </p>
-                <button type="button">
-                    <img src={zipzorpIcon} alt="Zipzorp" />
-                            Entrar em Contato
-                        </button>
-            </footer>
-        </article>
-    )
+interface TeacherItemProps {
+  teacher: {
+    id: number;
+    avatar: string;
+    bio: string;
+    cost: number;
+    name: string;
+    subject: string;
+    zipzorp: string;
+  };
 }
-export default TeacherItem
+
+const TeacherItem: React.FC<TeacherItemProps> = (props) => {
+  const { id, name, avatar, bio, cost, subject, zipzorp } = props.teacher;
+
+  function createNewConnection() {
+    api.post("connection", {
+      user_id: id,
+    });
+  }
+
+  return (
+    <article className="teacher-item">
+      <header>
+        <img src={avatar} alt={name} />
+        <div>
+          <strong>{name}</strong>
+          <span>{subject}</span>
+        </div>
+      </header>
+      <p>{bio}</p>
+
+      <footer>
+        <p>
+          Preço/hora
+          <strong>R$ {cost},00</strong>
+        </p>
+        <a
+          target="_blank"
+          onClick={createNewConnection}
+          href={`https://wa.me/${zipzorp}`}
+        >
+          <img src={zipzorpIcon} alt="Zipzorp" />
+          Entrar em Contato
+        </a>
+      </footer>
+    </article>
+  );
+};
+export default TeacherItem;
